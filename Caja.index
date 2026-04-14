@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SISTEMA DE CUADRE - JASON DAFNIS</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #161616;
+            --hacker-green: #00ff41;
+            --hacker-blue: #00e5ff;
+            --hacker-purple: #d400ff;
+            --input-bg: #222;
+            --text-color: #f0f0f0;
+            --border-color: #333;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; padding: 0;
+            display: flex; justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px; /* Optimizado para m viles */
+            padding: 12px;
+        }
+
+        h2 { 
+            text-align: center; color: white; margin: 10px 0 20px; font-size: 1.1rem; 
+            text-shadow: 0 0 10px var(--hacker-green); 
+            border-bottom: 2px solid var(--hacker-green);
+            padding-bottom: 10px; letter-spacing: 1px;
+        }
+
+        details { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px;
+            margin-bottom: 10px; 
+            width: 100%; 
+        }
+
+        summary { 
+            padding: 14px; cursor: pointer; font-weight: 700; color: var(--hacker-blue); 
+            background: #1c1c1c; list-style: none;
+            display: flex; align-items: center; justify-content: space-between;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        
+        /* Contenedor interno del summary para control total del espacio */
+        .summary-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding-right: 10px;
+        }
+
+        .summary-label { flex-shrink: 0; margin-right: 5px; }
+        
+        .sub-monto {
+            flex-grow: 1;
+            text-align: right;
+            font-size: 0.95rem;
+            color: var(--hacker-green);
+            font-family: 'Courier New', monospace;
+            white-space: nowrap;
+        }
+
+        summary::after { content: ''; font-size: 0.6rem; color: #555; margin-left: 5px; }
+        details[open] summary::after { content: ''; color: var(--hacker-blue); }
+
+        .content { padding: 12px; border-top: 1px solid #222; }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        
+        label { font-size: 0.9rem; flex: 1; padding-right: 8px; color: #bbb; }
+
+        input {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color); color: white;
+            padding: 10px; border-radius: 8px; text-align: right;
+            font-size: 1rem; outline: none; appearance: none;
+            width: 100px; /* Ancho fijo para inputs en filas simples */
+        }
+        
+        input:focus { border-color: var(--hacker-green); background: #2a2a2a; }
+
+        .item-row { display: flex; gap: 6px; margin-bottom: 10px; align-items: center; }
+        .item-row input[type="text"] { flex: 1; text-align: left; color: var(--hacker-blue); font-weight: 500; width: auto; }
+        .item-row input[type="number"] { width: 85px; flex-shrink: 0; }
+        
+        .btn-remove { background: none; border: none; color: #ff5252; font-size: 1.4rem; cursor: pointer; padding: 0 5px; }
+
+        .btn-add { 
+            background: rgba(0, 229, 255, 0.05); border: 1px dashed var(--hacker-blue); color: var(--hacker-blue); 
+            padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 5px;
+        }
+
+        .result-box { font-weight: 700; min-width: 90px; text-align: right; color: white; border-bottom: 1px solid #444; font-size: 1.2rem; }
+        
+        .total-final { 
+            margin-top: 20px; padding: 15px; border-radius: 10px; text-align: center; 
+            font-size: 1rem; font-weight: 900; border: 2px solid; text-transform: uppercase;
+        }
+        .deficit { background: rgba(255, 82, 82, 0.1); color: #ff5252; border-color: #ff5252; }
+        .surplus { background: rgba(0, 255, 65, 0.1); color: var(--hacker-green); border-color: var(--hacker-green); }
+
+        .btn-copy {
+            margin-top: 20px; background: var(--hacker-blue); color: black; border: none;
+            padding: 18px; width: 100%; border-radius: 10px; font-weight: 900;
+            cursor: pointer; text-transform: uppercase; font-size: 1rem;
+        }
+
+        .btn-reset {
+            margin-top: 15px; background: transparent; color: #444; border: 1px solid #222;
+            padding: 10px; width: 100%; border-radius: 8px; font-size: 0.7rem; cursor: pointer; text-transform: uppercase;
+        }
+
+        .copyright { margin-top: 30px; text-align: center; font-size: 0.7rem; color: #333; border-top: 1px solid #222; padding-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>> PANEL JASON DAFNIS</h2>
+
+    <details open>
+        <summary>VENTAS</summary>
+        <div class="content">
+            <div id="listaMozos"></div>
+            <button class="btn-add" onclick="agregarFila('listaMozos', 'mozo-valor', 'Nombre...')">+ A ADIR PERSONAL</button>
+        </div>
+    </details>
+
+    <div class="row">
+        <label style="color:var(--hacker-purple);">Venta Total (V.T.)</label>
+        <div class="result-box" id="ventaTotal">0.00</div>
+    </div>
+    <div class="row">
+        <label>CAJA (+)</label>
+        <input type="number" inputmode="decimal" id="cajaFondo" value="0" onfocus="handleFocus(this)" onblur="handleBlur(this)" oninput="calcular()">
+    </div>
+    <div class="row" style="margin-bottom: 25px;">
+        <label style="color:var(--hacker-purple); font-weight: 700;">TOTAL JASON DAFNIS</label>
+        <div class="result-box" id="aTotal" style="color:var(--hacker-blue)">0.00</div>
+    </div>
+
+    <details>
+        <summary>
+            <span class="summary-label">BILLETES</span>
+            <span class="sub-monto" id="subBilletes">S/ 0.00</span>
+        </summary>
+        <div class="content" id="containerBilletes"></div>
+    </details>
+
+    <details>
+        <summary>
+            <span class="summary-label">MONEDAS</span>
+            <span class="sub-monto" id="subMonedas">S/ 0.00</span>
+        </summary>
+        <div class="content" id="containerMonedas"></div>
+    </details>
+
+    <details>
+        <summary>
+            <span class="summary-label">OPENPAY</span>
+            <span class="sub-monto" id="subOpenPay">S/ 0.00</span>
+        </summary>
+        <div class="content">
+            <div class="row"><label>Cierre</label><input type="number" inputmode="decimal" id="posImpreso" value="0" onfocus="handleFocus(this)" onblur="handleBlur(this)" oninput="calcular()"></div>
+            <div class="row"><label>Ayer (-)</label><input type="number" inputmode="decimal" id="posAyer" value="0" onfocus="handleFocus(this)" onblur="handleBlur(this)" oninput="calcular()"></div>
+            <div class="row"><label>Madruga (+)</label><input type="number" inputmode="decimal" id="posMadrugada" value="0" onfocus="handleFocus(this)" onblur="handleBlur(this)" oninput="calcular()"></div>
+        </div>
+    </details>
+
+    <details>
+        <summary>
+            <span class="summary-label">GASTOS</span>
+            <span class="sub-monto" id="subGastos">S/ 0.00</span>
+        </summary>
+        <div class="content">
+            <div id="listaGastos"></div>
+            <button class="btn-add" onclick="agregarFila('listaGastos', 'gasto-valor', 'Motivo...')">+ A ADIR GASTO</button>
+        </div>
+    </details>
+
+    <div class="row" style="margin-top: 20px;">
+        <label style="color:var(--hacker-purple); font-weight: 900;">TOTAL JASON DAFNIS</label>
+        <div class="result-box" id="bTotal" style="color:var(--hacker-green); font-size: 1.4rem;">0.00</div>
+    </div>
+
+    <div id="analisisResult" class="total-final surplus">SISTEMA CUADRADO</div>
+
+    <button class="btn-copy" onclick="copiarReporte()"> COPIAR REPORTE</button>
+    <button class="btn-reset" onclick="reiniciarSistema()">REINICIAR SISTEMA</button>
+    
+    <div class="copyright" id="footerDate">  JASON DAFNIS</div>
+</div>
+
+<script>
+    const denBilletes = [200, 100, 50, 20, 10];
+    const denMonedas = [5, 2, 1, 0.5, 0.2, 0.1];
+    const STORAGE_KEY = 'CajaPersistente_Jason_v2';
+
+    function handleFocus(el) { if(el.value == '0') el.value = ''; }
+    function handleBlur(el) { if(el.value == '') el.value = '0'; }
+
+    function inicializarEstructura() {
+        const bCont = document.getElementById('containerBilletes');
+        denBilletes.forEach(v => {
+            bCont.innerHTML += `<div class="row"><span>S/ ${v}</span><input type="number" inputmode="numeric" class="cant-billete" data-val="${v}" value="0" onfocus="handleFocus(this)" onblur="handleBlur(this)" oninput="calcular()"></div>`;
+        });
+        const mCont = document.getElementById('containerMonedas');
+        denMonedas.forEach(v => {
+            mCont.innerHTML += `<div class="row"><span>S/ ${v.toFixed(2)}</span><input type="number" inputmode="decimal" class="cant-moneda" data-val="${v}" value="0" onfocus="handleFocus(this)" onblur="handleBlur(this)" oninput="calcular()"></div>`;
+        });
+    }
+
+    function agregarFila(id, cl, ph, n = '', v = '0') {
+        const cont = document.getElementById(id);
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerHTML = `<input type="text" placeholder="${ph}" value="${n}" oninput="guardarEstado()"><input type="number" inputmode="decimal" class="${cl}" value="${v}" onfocus="handleFocus(this)" onblur="handleBlur(this)" oninput="calcular()"><button class="btn-remove" onclick="this.parentElement.remove();calcular()"> </button>`;
+        cont.appendChild(div);
+        if(v !== '0') calcular();
+    }
+
+    function calcular() {
+        let vt = 0; 
+        document.querySelectorAll('.mozo-valor').forEach(i => vt += parseFloat(i.value) || 0);
+        const totalA = vt + (parseFloat(document.getElementById('cajaFondo').value) || 0);
+        
+        let sumB = 0; document.querySelectorAll('.cant-billete').forEach(i => sumB += (parseInt(i.value) || 0) * parseFloat(i.getAttribute('data-val')));
+        let sumM = 0; document.querySelectorAll('.cant-moneda').forEach(i => sumM += (parseInt(i.value) || 0) * parseFloat(i.getAttribute('data-val')));
+        
+        const openPayVal = (parseFloat(document.getElementById('posImpreso').value) || 0) - (parseFloat(document.getElementById('posAyer').value) || 0) + (parseFloat(document.getElementById('posMadrugada').value) || 0);
+        
+        let sumG = 0; document.querySelectorAll('.gasto-valor').forEach(i => sumG += parseFloat(i.value) || 0);
+
+        document.getElementById('subBilletes').innerText = "S/ " + sumB.toFixed(2);
+        document.getElementById('subMonedas').innerText = "S/ " + sumM.toFixed(2);
+        document.getElementById('subOpenPay').innerText = "S/ " + openPayVal.toFixed(2);
+        document.getElementById('subGastos').innerText = "S/ " + sumG.toFixed(2);
+
+        const totalB = sumB + sumM + openPayVal + sumG;
+        const diff = totalB - totalA;
+
+        document.getElementById('ventaTotal').innerText = vt.toFixed(2);
+        document.getElementById('aTotal').innerText = totalA.toFixed(2);
+        document.getElementById('bTotal').innerText = totalB.toFixed(2);
+        
+        const res = document.getElementById('analisisResult');
+        if (Math.abs(diff) < 0.01) { res.innerText = "SISTEMA CUADRADO"; res.className = "total-final surplus"; }
+        else if (diff > 0) { res.innerText = "EXCEDENTE: S/ " + diff.toFixed(2); res.className = "total-final surplus"; }
+        else { res.innerText = "FALTANTE: S/ " + Math.abs(diff).toFixed(2); res.className = "total-final deficit"; }
+        
+        guardarEstado();
+    }
+
+    function guardarEstado() {
+        const datos = {
+            cajaFondo: document.getElementById('cajaFondo').value,
+            posImpreso: document.getElementById('posImpreso').value,
+            posAyer: document.getElementById('posAyer').value,
+            posMadrugada: document.getElementById('posMadrugada').value,
+            mozos: Array.from(document.querySelectorAll('#listaMozos .item-row')).map(row => ({ n: row.querySelector('input[type="text"]').value, v: row.querySelector('.mozo-valor').value })),
+            gastos: Array.from(document.querySelectorAll('#listaGastos .item-row')).map(row => ({ n: row.querySelector('input[type="text"]').value, v: row.querySelector('.gasto-valor').value })),
+            billetes: Array.from(document.querySelectorAll('.cant-billete')).map(input => input.value),
+            monedas: Array.from(document.querySelectorAll('.cant-moneda')).map(input => input.value)
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+    }
+
+    function cargarPersistencia() {
+        const guardado = localStorage.getItem(STORAGE_KEY);
+        if (guardado) {
+            const d = JSON.parse(guardado);
+            document.getElementById('cajaFondo').value = d.cajaFondo || 0;
+            document.getElementById('posImpreso').value = d.posImpreso || 0;
+            document.getElementById('posAyer').value = d.posAyer || 0;
+            document.getElementById('posMadrugada').value = d.posMadrugada || 0;
+            if(d.mozos) d.mozos.forEach(m => agregarFila('listaMozos', 'mozo-valor', 'Nombre...', m.n, m.v));
+            if(d.gastos) d.gastos.forEach(g => agregarFila('listaGastos', 'gasto-valor', 'Motivo...', g.n, g.v));
+            if(d.billetes) {
+                const bInputs = document.querySelectorAll('.cant-billete');
+                d.billetes.forEach((val, i) => { if(bInputs[i]) bInputs[i].value = val; });
+            }
+            if(d.monedas) {
+                const mInputs = document.querySelectorAll('.cant-moneda');
+                d.monedas.forEach((val, i) => { if(mInputs[i]) mInputs[i].value = val; });
+            }
+        } else {
+            ['Personal 1', 'Personal 2'].forEach(n => agregarFila('listaMozos', 'mozo-valor', 'Nombre...', n));
+        }
+        calcular();
+    }
+
+    function reiniciarSistema() {
+        if(confirm(" Borrar todo?")) {
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+        }
+    }
+
+    function copiarReporte() {
+        const ahora = new Date();
+        const fechaStr = ahora.toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).toUpperCase();
+        
+        let sumB = 0; document.querySelectorAll('.cant-billete').forEach(i => sumB += (parseInt(i.value) || 0) * parseFloat(i.getAttribute('data-val')));
+        let sumM = 0; document.querySelectorAll('.cant-moneda').forEach(i => sumM += (parseInt(i.value) || 0) * parseFloat(i.getAttribute('data-val')));
+        const openPayReport = ((parseFloat(document.getElementById('posImpreso').value) || 0) - (parseFloat(document.getElementById('posAyer').value) || 0) + (parseFloat(document.getElementById('posMadrugada').value) || 0)).toFixed(2);
+        let sumG = 0; document.querySelectorAll('.gasto-valor').forEach(i => sumG += parseFloat(i.value) || 0);
+
+        let txt = ` *CIERRE:* ${fechaStr}\n\n`;
+        txt += ` *V.T.:* S/ ${document.getElementById('ventaTotal').innerText}\n`;
+        txt += ` *CAJA:* S/ ${parseFloat(document.getElementById('cajaFondo').value).toFixed(2)}\n`;
+        txt += ` *(Total A):* S/ ${document.getElementById('aTotal').innerText}\n\n`;
+        txt += `-------------------\n`;
+        txt += ` *Billetes:* S/ ${sumB.toFixed(2)}\n`;
+        txt += ` *Monedas:* S/ ${sumM.toFixed(2)}\n`;
+        txt += ` *OpenPay:* S/ ${openPayReport}\n`;
+        txt += ` *Gastos:* S/ ${sumG.toFixed(2)}\n`;
+        txt += `-------------------\n\n`;
+        txt += ` *AN LISIS:* ${document.getElementById('analisisResult').innerText}\n\n`;
+        txt += `  JASON DAFNIS - ${ahora.toLocaleString('es-PE', { hour12: true })}`;
+
+        navigator.clipboard.writeText(txt).then(() => { alert("Copiado!"); });
+    }
+
+    window.onload = () => {
+        inicializarEstructura();
+        cargarPersistencia();
+        document.getElementById('footerDate').innerText = `  JASON DAFNIS - ${new Date().toLocaleDateString('es-PE')}`;
+    };
+</script>
+</body>
+</html>
