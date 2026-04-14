@@ -335,13 +335,13 @@
         txt += `🪙 Monedas: S/ ${sumM.toFixed(2)}\n`;
         txt += `💳 OpenPay: S/ ${openPayReport}\n`;
         txt += `💸 Gastos: S/ ${sumG.toFixed(2)}\n`;
-        txt += `📌 *TOTAL RECAUDADO: S/ ${document.getElementById('bTotal').innerText}*\n\n`;
+        txt += `📌 *TOTAL COMPARATIVO: S/ ${document.getElementById('bTotal').innerText}*\n\n`;
 
         txt += `📝 *ANÁLISIS FINAL*\n`;
         txt += `━━━━━━━━━━━━━━━━━━\n`;
         txt += `✨ ${document.getElementById('analisisResult').innerText}\n\n`;
         
-        txt += `👤 *Responsable:* JASON DAFNIS\n`;
+        txt += `👤 *Responsable:* *_JASON DAFNIS_*\n`;
         txt += `📱 _Reporte generado automáticamente_`;
 
         navigator.clipboard.writeText(txt).then(() => { alert("✅ Reporte profesional copiado"); });
